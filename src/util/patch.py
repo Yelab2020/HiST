@@ -19,7 +19,7 @@ def tile(
     col: int = 64
 ):
     """
-    Tiling HE image that has a ratio(height/width) of 1.25 to square tiles
+    Tiling HE image that has a ratio(height/width) of 1.25 to square patches
     """
     if img is not None:
         img = img
@@ -77,15 +77,13 @@ def padding(HE_path):
 
 
 def tile_HE(
-    series,
+    sample_id: str,
+    HE_path: str,
     out_path:str = '../data/processed_HE/',
     target_size: int = 224,
     row: int = 80,
     col: int = 64
 ):
-    sample_id = series['sample_id']
-    HE_path = series['HE_path']
-    
     padded_image,_,_ = padding(HE_path)
     
     patch_width = padded_image.width // col

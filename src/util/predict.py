@@ -8,10 +8,10 @@ from tqdm import tqdm
 import PIL.Image as Image
 import matplotlib.cm as cm
 import matplotlib.pyplot as plt
-from CMUNet.model import CMUNet
+from PredictionModule.model import CMUNet
 from util.seed import seed_torch
 import matplotlib.colors as mcolors
-from CMUNet.dataset import GeneDataset, TumorDataset
+from PredictionModule.dataset import GeneDataset, TumorDataset
 from palettable.colorbrewer.diverging import RdYlBu_10_r
 
 Image.MAX_IMAGE_PIXELS = 10000000000
@@ -609,15 +609,15 @@ def VisualizeGeneHE_compare(
         features:list,
         sample_HEpath_dict:dict,
         model_path:str,
-        tile_dir=None,
+        clean_tile_dir=None,
         alpha=1,
         out_dir=None
 ):
     plot_df1,HE1 = GetGenePlotData(sample_id1,gene,gene_list,sample_list,features,sample_HEpath_dict[sample_id1],model_path)
     plot_df2,HE2 = GetGenePlotData(sample_id2,gene,gene_list,sample_list,features,sample_HEpath_dict[sample_id2],model_path)
-    if tile_dir:
-        plot_df1 = GetTissueData(sample_id1,plot_df1,tile_dir)
-        plot_df2 = GetTissueData(sample_id2,plot_df2,tile_dir)
+    if clean_tile_dir:
+        plot_df1 = GetTissueData(sample_id1,plot_df1,clean_tile_dir)
+        plot_df2 = GetTissueData(sample_id2,plot_df2,clean_tile_dir)
     mapped_rgb1, mapped_rgb2, mapper, minima, maxima = NormalizeColor_together(plot_df1['gene_values'],plot_df2['gene_values'])
     fig, axs = plt.subplots(1, 2,figsize=(8, 4))
     axs[0].imshow(np.array(HE1))
@@ -645,13 +645,13 @@ def VisualizeGeneHE(
         features:list,
         sample_HEpath_dict:dict,
         model_path:str,
-        tile_dir=None,
+        clean_tile_dir=None,
         alpha=1,
         out_dir=None
 ):
     plot_df, HE = GetGenePlotData(sample_id,gene,gene_list,sample_list,features,sample_HEpath_dict[sample_id],model_path)
-    if tile_dir:
-        plot_df = GetTissueData(sample_id,plot_df,tile_dir)
+    if clean_tile_dir:
+        plot_df = GetTissueData(sample_id,plot_df,clean_tile_dir)
     mapped_rgb, mapper, minima, maxima = NormalizeColor(plot_df['gene_values'])
     fig, ax = plt.subplots(figsize=(5, 5))
     ax.imshow(np.array(HE))
@@ -677,15 +677,15 @@ def VisualizeTumorHE(
         features:list,
         sample_HEpath_dict:dict,
         model_path:str,
-        tile_dir=None,
+        clean_tile_dir=None,
         alpha=1,
         colors=["#8dd3c7","#ffed6f"],
         label = False,
         out_dir = None
 ):
     plot_df, HE = GetTumorPlotData(sample_id,sample_list,features,sample_HEpath_dict[sample_id],model_path,label)
-    if tile_dir:
-        plot_df = GetTissueData(sample_id,plot_df,tile_dir)
+    if clean_tile_dir:
+        plot_df = GetTissueData(sample_id,plot_df,clean_tile_dir)
     cmap = mcolors.LinearSegmentedColormap.from_list('custom_cmap', colors, N=100)
     fig, ax = plt.subplots(figsize=(4, 4))
     ax.imshow(np.array(HE))
@@ -746,7 +746,7 @@ def GetPredictTMList(
         
     return predict_mask_matrix_list
 
-def GetPredictTMList_TCGA(
+def GetPredictTMList_label(
     sample_list: list,
     all_sample_features: list,
     model_path: str,

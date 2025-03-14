@@ -1,5 +1,3 @@
-data/seurat_obj
-data/HE
-data/hires_HE
 output
 resource/ctranspath.pth
+.Rhistory

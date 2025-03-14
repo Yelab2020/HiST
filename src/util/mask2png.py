@@ -7,7 +7,7 @@ import rpy2.robjects as robjects
 
 def MaskRds2png(rds_path, type_num:int, out_path):
     sample_rds = os.path.basename(rds_path)
-    sample_id = os.path.splitext(sample_rds)[0]
+    sample_id = sample_rds.split('.')[0]
     readRDS = robjects.r['readRDS']
     mask_rds = readRDS(rds_path)
     mask_array = np.array(mask_rds)

@@ -8,15 +8,15 @@ import torch.nn as nn
 from tqdm import tqdm
 import torch.optim as optim
 from datetime import datetime
-from CMUNet.model import CMUNet
+from PredictionModule.model import CMUNet
 from util.seed import seed_torch
 from collections import OrderedDict
 from torch.optim import lr_scheduler
-from CMUNet.metrics import iou_score
-from CMUNet.metrics import AverageMeter
+from PredictionModule.metrics import iou_score
+from PredictionModule.metrics import AverageMeter
 from sklearn.model_selection import LeaveOneOut
-from CMUNet.dataset import GeneDataset, TumorDataset
-from CMUNet.metrics import calculate_correlations, SavePredictMask
+from PredictionModule.dataset import GeneDataset, TumorDataset
+from PredictionModule.metrics import calculate_correlations, SavePredictMask
 
 
 
