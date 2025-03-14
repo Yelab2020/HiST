@@ -195,7 +195,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ```
 @article{HiST,
     title={HiST: Histological Image Reconstruct Tumor Spatial Transcriptomics via MultiScale Fusion Deep Learning},
-    author={Wei Li#, Dong Zhang#, Yao Liu, Junke Zheng*, Cizhong Jiang*, Youqiong Ye*},
+    author={Wei Li1#, Dong Zhang#, Eryu Peng, Shijun Shen, Yao Liu*, Junke Zheng*, Cizhong Jiang*, Youqiong Ye*},
     journal={XX},
     year={2025},
     doi={xx}
