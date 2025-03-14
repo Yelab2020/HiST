@@ -167,7 +167,7 @@ nohup python tile_cleanup.py --source_root_path './output/TCGA/tiles' \
 
 ##### B. Immunotherapy response model
 *Please refer to the [vignette](./vignettes/3.2application_module_ICB.ipynb) for the following steps.*
-- Step0: Download slide images and metadata from [NGDC](https://ngdc.cncb.ac.cn/).
+- Step0: Download slide images from [NGDC](https://ngdc.cncb.ac.cn/).
 - Step1: Prepare WSI patches.
 - Step3: Feature extraction.
 - Step4: Spatial gene profiles prediction by HiST gene prediction module.
@@ -195,7 +195,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ```
 @article{HiST,
     title={HiST: Histological Image Reconstruct Tumor Spatial Transcriptomics via MultiScale Fusion Deep Learning},
-    author={Wei Li1#, Dong Zhang#, Eryu Peng, Shijun Shen, Yao Liu*, Junke Zheng*, Cizhong Jiang*, Youqiong Ye*},
+    author={Wei Li#, Dong Zhang#, Eryu Peng, Shijun Shen, Yao Liu*, Junke Zheng*, Cizhong Jiang*, Youqiong Ye*},
     journal={XX},
     year={2025},
     doi={xx}
