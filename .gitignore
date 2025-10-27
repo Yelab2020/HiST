@@ -1,3 +1,5 @@
 output
 resource/ctranspath.pth
 .Rhistory
+__pycache__/
+data
