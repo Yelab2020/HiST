@@ -254,7 +254,7 @@ class TumorSolver:
         HE_path : str = './data/HE',
         HE_ext : str = '.jpg',
         out_dir='./checkpoint_tumor_loo/',
-        use_best=False
+        use_best=True
     ):
         seed_torch(self.seed)
         current_datetime = datetime.now().strftime('%Y%m%d%H%M')
@@ -690,7 +690,7 @@ class GeneSolver:
         cordf_dir = os.path.join(out_dir, 'cor_df')
         if not os.path.exists(cordf_dir):
             os.makedirs(cordf_dir,exist_ok=True)
-        file_names = [os.path.join(cor_dir, file) for file in os.listdir(cor_dir)]
+        file_names = [os.path.join(cor_dir, f"{sample}_correlations.csv") for sample in sample_list]
         all_pearson = []
         all_spearman = []
         for file in file_names:
