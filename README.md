@@ -36,39 +36,32 @@ To get started, clone the repository and install the required dependencies:
 git clone https://github.com/Yelab2020/HiST.git
 cd HiST
 ```
-**Method1 :Use requirement file(Not recommended):**
+**Method1: Docker image:**
+
+You can either pull the pre-built Docker image from [Docker Hub](https://hub.docker.com/r/bejsernia/hist/tags):
 ```bash
-conda create -n HiST python=3.8.18 mamba
-conda activate HiST
-mamba install --yes -n HiST -c conda-forge --file requirements.txt
-pip install ./resource/timm-0.5.4.tar
+docker pull bejsernia/hist:251021
 ```
-Use `nvcc -V`to check cuda version on your device
-**Method2 :Follow the instructions:**
+or build the image locally using the provided Dockerfile:
 ```bash
-conda create -n HiST python=3.8.18 mamba
+docker build -t hist .
+```
+
+**Method2: Follow the instructions to config environment:**
+```bash
+#Create env
+conda create -n HiST python=3.8.18
 conda activate HiST
-#Obtain the corresponding CUDA version of torch on your device:https://pytorch.org/get-started/locally/
-#Or Install by mamba(Recommended):
-mamba install pytorch torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c nvidia
-#Author dependent configuration (used to reproduce):
-#pip install torch==1.10.1+cu111 torchvision==0.11.2+cu111 torchaudio==0.10.1 -f https://download.pytorch.org/whl/cu111/torch_stable.html
-#Other dependencies
-mamba install -c conda-forge python-spams=2.6.1
-pip install numpy==1.22 imgaug albumentations pandas matplotlib scikit-learn opencv-python staintools lifelines torchsurv openpyxl palettable leidenalg ipykernel tqdm scanpy
+pip install numpy==1.22 pandas matplotlib scikit-learn imgaug albumentations scanpy
+#Use Conda to manage the non-Python dependencies.
+conda install python-spams=2.6.1 openslide-python opencv-python rpy2 -c conda-forge
+pip install staintools lifelines openpyxl palettable leidenalg ipykernel
+#Install torch from the specific source
+pip install torch==1.10.1+cu111 torchvision==0.11.2+cu111 torchaudio==0.10.1 -f https://download.pytorch.org/whl/cu111/torch_stable.html
 #Install modified timm for CTranspath(Feature extraction model)
 pip install ./resource/timm-0.5.4.tar
-```
-
-**install seurat in R(conda env HiST)**
-
-```bash
-mamba install rpy2 r-tidyverse r-Seurat -c r
-```
-```R
-# Run in R console
-packages <- c("Seurat", "tidyverse")
-install.packages("sf", repos = "https://cran.r-project.org")
+#ipykernel for jupyter notebook
+python -m ipykernel install --user --name HiST --display-name HiST
 ```
 
 **Used for gene selection method (Optional):[R package sf installation instructions](https://r-spatial.github.io/sf/)**
@@ -76,25 +69,113 @@ install.packages("sf", repos = "https://cran.r-project.org")
 sudo add-apt-repository ppa:ubuntugis/ubuntugis-unstable
 sudo apt-get update
 sudo apt-get install libudunits2-dev libgdal-dev libgeos-dev libproj-dev libsqlite0-dev
-mamba install r-sf r-spdep -c r
+conda install r-Seurat r-tidyverse r-sf r-spdep -c r
 ```
 
-**Other dependencies(Optional; if WSIs are used for training or prediction)**
-```bash
-sudo apt update && apt install -y openslide-tools
-pip install openslide-python
-```
 ---
 
-## Usage
+## Run demo
 
-We use two sample from CRC dataset of 10x Visium technology as an example.
+To support reproducibility and rapid functional validation, we provide both executable scripts and a step-by-step notebook for two types of experiments: (i) a lightweight smoke test using a demo CRC dataset (three samples), including training, validation, and visualization steps, which can be completed within approximately ten minutes on a single GPU, and (ii) reproduction of the HiST CRC prediction results using our released pretrained HiST model weights.
 
-### 0. Download data
+### 1. Download demo data
 
-##### (A)Pre-trained model weights for feature extraction can be downloaded [here](https://drive.google.com/file/d/1DoDx_70_TLj98gTf6YTXnu4tFhsFocDX/view?usp=sharing), and please put it in `/your_working_directory/HiST/resource/`.
+#### (A)Pre-trained model weights for feature extraction can be downloaded [here](https://drive.google.com/file/d/1g36qBWfnqoot1JpgTisBjPg4GrUOU4wT/view?usp=sharing), and please put it in `/your_working_directory/HiST/resource/`.
 
-##### (B)Two test sample data of CRC can be downloaded [here](https://drive.google.com/file/d/1-87C3EQf4UK-EsNiWlMGFWUDvxNX-Sb_/view?usp=sharing). Please unzip data.zip and put the contents in `/your_working_directory/HiST/data/`
+#### (B)Demo data and HiST model weights for reproduction of CRC can be downloaded [here](https://drive.google.com/file/d/1z_PJMdffWsyalKtY01G3lvUDIy4C-cF2/view?usp=sharing). 
+Please unzip data.zip and put the contents in `/your_working_directory/HiST/demo/data/`
+
+```
+./demo/data/
+├── HE
+│   ├── CRC1.jpg
+│   ├── CRC2.jpg
+│   └── M1042T.jpg
+├── geneMatrix
+│   ├── CRC1.rds.gz
+│   ├── CRC2.rds.gz
+│   └── M1042T.rds.gz
+├── gene_list
+│   └── CRC_SVG346_list.txt
+├── mask_png
+│   └── 0
+│       ├── CRC1.png
+│       ├── CRC2.png
+│       └── M1042T.png
+├── model_weights
+│   └── M1042T_200_model.pth
+├── scale_factor
+│   ├── CRC1.csv
+│   ├── CRC2.csv
+│   └── M1042T.csv
+└── tissue_positions_list
+    ├── CRC1.csv
+    ├── CRC2.csv
+    └── M1042T.csv
+```
+
+### 2. Run (Executable scripts or step-by-step notebook)
+
+#### (A) Executable scripts (docker)
+```bash
+python ./demo/script/1.preprocess.py
+python ./demo/script/2.LOO.py
+python ./demo/script/3.reproduce.py
+```
+
+#### (B) Notebook (conda env)
+*Please refer to the [notebook](./demo/notebook/LOOtest&Reproduction.ipynb).*
+
+### 3. Check the results
+Data folder structure:
+- features: Extracted H&E features for each sample.
+- model: Leave-one-out cross-validation results.
+
+  (i) gene: Spatial gene expression prediction model.
+
+  - cor_df: Pearson correlation results for validation genes in each fold.
+  - visualization：Spatial visualization of predicted gene expression.
+
+  (ii) tumor: Tumor spot prediction model.
+
+  - predict_masks: Intermediate prediction results (binary tumor masks).
+  - predict_results: Spatial visualization of tumor region predictions.
+
+- reproduction_Figure3b: Visualization results comparing HiST predictions with ground-truth expression profiles using pretrained model weights and raw data.
+
+```
+output/
+├── features
+├── model
+│   ├── gene
+│   │   └── checkpoint_loo
+│   │       └── xx
+│   │           ├── best_model
+│   │           ├── cor_df
+│   │           ├── correlations
+│   │           ├── last_model
+│   │           ├── log
+│   │           └── visualization
+│   └── tumor
+│       └── checkpoint_loo
+│           └── xx
+│               ├── best_model
+│               ├── last_model
+│               ├── log
+│               ├── predict_masks
+│               └── predict_results
+├── reproduction_Figure3b
+├── tile
+│   ├── CRC1
+│   ├── CRC2
+│   └── M1042T
+```
+
+## HiST tutorial
+### 0. Prepare data
+
+Put your own data in `/your_working_directory/HiST/data/`
+
 Data folder structure:
 - HE: Full resolution HE images.
 - hires_HE: High resolution HE images provided by spaceranger.
@@ -110,7 +191,8 @@ Data folder structure:
 ├── seurat_obj
 │   ├── CRC1.rds.gz
 │   └── CRC2.rds.gz
-```
+``` 
+
 
 ### 1. Preprocess module
 For preprocess module, we obtained the histological information and spatial context of the original whole slice imaging (WSI), avoiding the high GPU memory requirements of high-resolution WSI.
