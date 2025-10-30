@@ -47,7 +47,14 @@ or build the image locally using the provided Dockerfile:
 docker build -t hist .
 ```
 
-**Method2: Follow the instructions to config environment:**
+**Method2: Use environment.yml to setup:**
+```bash
+conda env create -f environment.yml -n HiST
+#Install modified timm for CTranspath(Feature extraction model)
+pip install ./resource/timm-0.5.4.tar
+```
+
+**Method3: Follow the instructions to config environment:**
 ```bash
 #Create env
 conda create -n HiST python=3.8.18

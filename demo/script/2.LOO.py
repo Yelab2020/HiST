@@ -96,10 +96,7 @@ subdirs.sort(key=lambda x: os.path.getmtime(os.path.join(checkpoint_dir, x)))
 latest_dir = subdirs[-1]
 
 pearson_df = pd.read_csv(os.path.join(checkpoint_dir, latest_dir,f'cor_df/pearson_cor.csv'),index_col=0)
-print("Top 10 genes with high Pearson correlation:",pearson_df.mean(axis = 1).sort_values(ascending = False).head(10))
-
-spearman_df = pd.read_csv(os.path.join(checkpoint_dir, latest_dir,f'cor_df/spearman_cor.csv'),index_col=0)
-print("Top 10 genes with high Spearman correlation:",spearman_df.mean(axis = 1).sort_values(ascending = False).head(10))
+print("Top 10 genes with high Pearson correlation:\n",pearson_df.mean(axis = 1).sort_values(ascending = False).head(10))
 
 for sample in sample_list:
     VisualizeGeneST(
@@ -122,27 +119,20 @@ for sample in sample_list:
         out_dir=os.path.join(checkpoint_dir, latest_dir,'visualization')
     )
     
-plot_df = pd.concat([pearson_df,spearman_df],keys = ('Pearson','Spearman'))
+plot_df = pd.concat([pearson_df],keys = ('Pearson'))
 plot_df = plot_df.stack()
-plot_df = plot_df.rename_axis(index = ['cor','gene','sample'])
+plot_df = plot_df.rename_axis(index = ['HiST','gene','sample'])
 plot_df = plot_df.reset_index(level = [0,2], name = 'correlation')
 sns.set(style="whitegrid")
-plt.figure(figsize=(8, 6))
-ax = sns.boxplot(data = plot_df, x='sample', hue = 'cor' ,y = 'correlation',showfliers = False)
-ax.legend(loc='lower right')
+plt.figure(figsize=(3, 6))
+ax = sns.boxplot(data = plot_df, x='sample', hue = 'HiST' ,y = 'correlation',showfliers = False)
+ax.get_legend().remove()
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
 ax.figure.savefig(os.path.join(checkpoint_dir, latest_dir,'visualization',"loo_correlation_benchmark.pdf"),bbox_inches = 'tight')
 
-df1_list = pearson_df.values.flatten().tolist()
-df2_list = spearman_df.values.flatten().tolist()
-
-new_df = pd.DataFrame({'Pearson': df1_list,
-                       'Spearman': df2_list})
-
-plt.figure(figsize=(4, 6))
-ax = sns.violinplot(data=new_df)
-ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
+cor_df = pd.DataFrame({'HiST': pearson_df.values.flatten().tolist()})
+plt.figure(figsize=(3, 6))
+ax = sns.violinplot(data=cor_df)
 sns.set(style="whitegrid")
-ax.set_xlabel('Correlation type')
-ax.set_ylabel('Correlation')
+ax.set_ylabel('Pearson Correlation')
 ax.figure.savefig(os.path.join(checkpoint_dir, latest_dir,'visualization',"violin_correlation_benchmark.pdf"),bbox_inches = 'tight')
