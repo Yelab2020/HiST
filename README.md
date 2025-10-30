@@ -6,11 +6,20 @@
 
 - [Introduction](#introduction)
 - [Installation](#installation)
-- [Usage](#usage)
-  - [0.Download data](#0-download-data)
-  - [1.Preprocess module](#1-preprocess-module)
-  - [2.Prediction module](#2-prediction-module)
-  - [3.Application Module](#3-application-module)
+  - [Method 1: Docker](#method1-docker-image)
+  - [Method 2: Conda environment.yml](#method2-use-environment-file-to-setup)
+  - [Method 3: Manual installation](#method3-follow-the-instructions-to-config-environment)
+- [Quick Start: Run Demo](#run-demo)
+  - [1. Download demo data](#1-download-demo-data)
+  - [2. Run demo](#2-run-demo)
+  - [3. Check output results](#3-check-the-results)
+- [HiST Tutorial](#hist-tutorial)
+  - [0. Prepare your own data](#0-prepare-data)
+  - [1. Preprocess module](#1-preprocess-module)
+  - [2. Prediction module](#2-prediction-module)
+  - [3. Application module](#3-application-module)
+    - [A. Survival model](#a-survival-model)
+    - [B. Immunotherapy response model](#b-immunotherapy-response-model)
 - [Credits and Acknowledgments](#credits-and-acknowledgments)
 - [License](#license)
 - [Citation](#citation)
@@ -36,7 +45,7 @@ To get started, clone the repository and install the required dependencies:
 git clone https://github.com/Yelab2020/HiST.git
 cd HiST
 ```
-**Method1: Docker image:**
+### Method1: Docker image
 
 You can either pull the pre-built Docker image from [Docker Hub](https://hub.docker.com/r/bejsernia/hist/tags):
 ```bash
@@ -47,14 +56,14 @@ or build the image locally using the provided Dockerfile:
 docker build -t hist .
 ```
 
-**Method2: Use environment.yml to setup:**
+### Method2: Use environment file to setup
 ```bash
 conda env create -f environment.yml -n HiST
 #Install modified timm for CTranspath(Feature extraction model)
 pip install ./resource/timm-0.5.4.tar
 ```
 
-**Method3: Follow the instructions to config environment:**
+### Method3: Follow the instructions to config environment
 ```bash
 #Create env
 conda create -n HiST python=3.8.18
@@ -121,7 +130,8 @@ Please unzip data.zip and put the contents in `/your_working_directory/HiST/demo
     └── M1042T.csv
 ```
 
-### 2. Run (Executable scripts or step-by-step notebook)
+### 2. Run demo
+(Executable scripts or step-by-step notebook)
 
 #### (A) Executable scripts (docker)
 ```bash
