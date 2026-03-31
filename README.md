@@ -299,3 +299,9 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
     doi={10.1002/advs.202514351}
 }
 ```
+
+---
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/image?repos=Yelab2020/HiST&type=date&legend=top-left)](https://www.star-history.com/?repos=Yelab2020%2FHiST&type=date&legend=bottom-right)
